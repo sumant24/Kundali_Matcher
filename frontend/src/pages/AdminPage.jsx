@@ -360,7 +360,8 @@ export default function AdminPage() {
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>
-                  पासवर्ड / Admin Password *
+                  <span>पासवर्ड / Admin Password</span>
+                  <span style={{ color: '#D32F2F', marginLeft: '4px', fontWeight: 800, fontSize: '0.95rem' }}>*</span>
                 </label>
                 <div style={{ position: 'relative' }}>
                   <input
@@ -433,7 +434,8 @@ export default function AdminPage() {
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>
-                  ६-अंकी OTP / 6-Digit Verification Code *
+                  <span>६-अंकी OTP / 6-Digit Verification Code</span>
+                  <span style={{ color: '#D32F2F', marginLeft: '4px', fontWeight: 800, fontSize: '0.95rem' }}>*</span>
                 </label>
                 <input
                   type="text"
