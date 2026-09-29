@@ -327,7 +327,6 @@ export default function MatchFormPage() {
                 type="text"
                 value={form.fullName}
                 onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                placeholder="उदा. अंकिता शर्मा / Ankita Sharma"
                 required
                 style={{
                   width: '100%',
@@ -494,7 +493,6 @@ export default function MatchFormPage() {
               <textarea
                 value={form.notes}
                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                placeholder="उदा. पुरोहितांनी सुचवलेली पत्रिका / Referred by family astrologer"
                 rows={2}
                 style={{
                   width: '100%',
