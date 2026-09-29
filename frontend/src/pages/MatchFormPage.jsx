@@ -289,7 +289,11 @@ export default function MatchFormPage() {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-light)' }}>
               <span style={{ color: 'var(--text-secondary)' }}>नक्षत्र / Nakshatra:</span>
-              <strong style={{ color: 'var(--primary-navy)' }}>पूर्व भाद्रपदा (चरण १) / Purva Bhadrapada</strong>
+              <strong style={{ color: 'var(--primary-navy)' }}>पूर्व भाद्रपदा / Purva Bhadrapada</strong>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-light)' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>नक्षत्र चरण / Charan:</span>
+              <strong style={{ color: 'var(--primary-navy)' }}>चरण १ / Charan 1</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-light)' }}>
               <span style={{ color: 'var(--text-secondary)' }}>गण / Gana:</span>
@@ -303,9 +307,61 @@ export default function MatchFormPage() {
               <span style={{ color: 'var(--text-secondary)' }}>कुलदेवता / Kuladevata:</span>
               <strong style={{ color: 'var(--primary-navy)', textAlign: 'right', maxWidth: '60%' }}>पिंगलाई देवी, नेरपिंगलाई आणि व्यंकटेश बालाजी / Pinglai Devi & Venkatesh Balaji</strong>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-light)' }}>
               <span style={{ color: 'var(--text-secondary)' }}>मंगळ स्थिती / Manglik:</span>
               <span className="badge badge-success">नाही / Non-Manglik</span>
+            </div>
+
+            {/* Property House Details */}
+            <div style={{
+              marginTop: '6px',
+              padding: '10px 12px',
+              backgroundColor: 'var(--bg-main)',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border-light)'
+            }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--accent-gold-dark)', fontWeight: 700, marginBottom: '4px' }}>
+                संपत्ति घर / Property House
+              </div>
+              <div style={{ fontWeight: 600, color: 'var(--primary-navy)', fontSize: '0.88rem' }}>
+                स्वतःचे घर (तळमजला + १ मजला)
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 400, marginLeft: '4px' }}>
+                  / Own house (Ground + 1 Floor)
+                </span>
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px', lineHeight: 1.4 }}>
+                तळमजला भाड्याने दिला आहे आणि आम्ही पहिल्या मजल्यावर राहतो.
+                <br />
+                <span style={{ fontStyle: 'italic', fontSize: '0.76rem' }}>
+                  Ground floor is on rent and live on 1st floor
+                </span>
+              </div>
+            </div>
+
+            {/* Contact Numbers Details */}
+            <div style={{
+              padding: '10px 12px',
+              backgroundColor: 'var(--bg-main)',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border-light)'
+            }}>
+              <div style={{ fontSize: '0.78rem', color: 'var(--accent-gold-dark)', fontWeight: 700, marginBottom: '6px' }}>
+                संपर्क क्रमांक / Contact Numbers
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', fontSize: '0.84rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>वडील / Father:</span>
+                  <a href="tel:9822235069" style={{ color: 'var(--primary-navy)', fontWeight: 600, textDecoration: 'none' }}>9822235069</a>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>आई / Mother:</span>
+                  <a href="tel:9403590890" style={{ color: 'var(--primary-navy)', fontWeight: 600, textDecoration: 'none' }}>9403590890</a>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>मुलगा / Son:</span>
+                  <a href="tel:8208007688" style={{ color: 'var(--primary-navy)', fontWeight: 600, textDecoration: 'none' }}>8208007688</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
