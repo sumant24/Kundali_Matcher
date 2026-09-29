@@ -1,14 +1,20 @@
 import axios from 'axios';
 
-// Vite default or env baseURL
-const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? 'http://localhost:5000/api' : '/api');
+// Live backend API endpoint (Cloudflare secure tunnel)
+const CLOUDFLARE_API = 'https://participants-graham-python-evans.trycloudflare.com/api';
+
+const API_BASE = import.meta.env.VITE_API_URL || (
+  typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5000/api'
+    : CLOUDFLARE_API
+);
 
 const client = axios.create({
   baseURL: API_BASE,
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 8000,
+  timeout: 15000,
 });
 
 // Attach Authorization header if session token is available
@@ -243,63 +249,18 @@ export const deleteMatch = async (id) => {
 
 // Admin 2-Step OTP Authentication
 export const loginStep1 = async (password) => {
-  try {
-    const response = await client.post('/auth/login-step1', { password });
-    return response.data;
-  } catch (err) {
-    // If backend returned a specific error (e.g. 401 wrong password), preserve it
-    if (err.response && (err.response.status === 400 || err.response.status === 401)) {
-      throw err;
-    }
-    // Static / Offline fallback (e.g., GitHub Pages)
-    if (password === 'MH1422@31') {
-      return {
-        status: 'otp_sent',
-        email: 'sumantjoshi24@gmail.com',
-        masked_email: 'sum...@gmail.com',
-        message: 'प्रशासक सुरक्षा पडताळणी / Admin Verification (Enter any 6 digits or OTP to proceed)'
-      };
-    } else {
-      const error = new Error('चुकीचा पासवर्ड / Incorrect password');
-      error.response = { data: { error: 'चुकीचा पासवर्ड / Incorrect password' } };
-      throw error;
-    }
-  }
+  const response = await client.post('/auth/login-step1', { password });
+  return response.data;
 };
 
 export const verifyOtp = async (otp) => {
-  try {
-    const response = await client.post('/auth/verify-otp', { otp });
-    return response.data;
-  } catch (err) {
-    if (err.response && (err.response.status === 400 || err.response.status === 401)) {
-      throw err;
-    }
-    // Static / Offline fallback
-    if (otp && otp.trim().length === 6) {
-      return {
-        token: 'sumant_admin_session_valid_' + Date.now(),
-        email: 'sumantjoshi24@gmail.com'
-      };
-    } else {
-      const error = new Error('कृपया ६ अंकी OTP प्रविष्ट करा / Please enter a valid 6-digit code');
-      error.response = { data: { error: 'कृपया ६ अंकी OTP प्रविष्ट करा / Please enter a valid 6-digit code' } };
-      throw error;
-    }
-  }
+  const response = await client.post('/auth/verify-otp', { otp });
+  return response.data;
 };
 
 export const checkSession = async () => {
-  try {
-    const response = await client.get('/auth/check-session');
-    return response.data;
-  } catch (err) {
-    const token = localStorage.getItem('sumant_admin_token');
-    if (token) {
-      return { authenticated: true, email: 'sumantjoshi24@gmail.com' };
-    }
-    throw err;
-  }
+  const response = await client.get('/auth/check-session');
+  return response.data;
 };
 
 export const logoutAdmin = async () => {
