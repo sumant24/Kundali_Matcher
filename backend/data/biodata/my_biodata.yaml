@@ -57,8 +57,8 @@ astrology:
   nakshatra: "Purva Bhadrapada"
   nakshatra_marathi: "पूर्व भाद्रपदा"
   nakshatra_charan: 1
-  gotra: "Chandratra"
-  gotra_marathi: "चंद्रत्र"
+  gotra: "Chandratr"
+  gotra_marathi: "चांद्रात्र"
   kuladevata: "Pinglai Devi, Nerpinglai And Venkatesh Balaji"
   kuladevata_marathi: "पिंगलाई देवी, नेरपिंगलाई आणि व्यंकटेश बालाजी"
   lagna: "Vrishchik"
@@ -72,7 +72,7 @@ astrology:
 contact:
   address: "Abhyankar Nagar, Nagpur, Maharashtra"
   address_marathi: "अभ्यंकर नगर, नागपूर, महाराष्ट्र"
-  phone: "9822235067, 9403590890, 8208007688"
+  phone: "9822235069, 9403590890, 8208007688"
   email: "sumantjoshi24@gmail.com"
 
 meta:

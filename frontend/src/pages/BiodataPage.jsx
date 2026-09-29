@@ -163,8 +163,8 @@ export default function BiodataPage() {
     {
       labelMarathi: 'गोत्र',
       labelEnglish: 'Gotra',
-      valueMarathi: astrology.gotra_marathi || 'चंद्रत्र',
-      valueEnglish: astrology.gotra || 'Chandratra'
+      valueMarathi: astrology.gotra_marathi || 'चांद्रात्र',
+      valueEnglish: astrology.gotra || 'Chandratr'
     },
     {
       labelMarathi: 'कुलदेवता',
@@ -196,8 +196,8 @@ export default function BiodataPage() {
     {
       labelMarathi: 'संपर्क क्रमांक',
       labelEnglish: 'Contact Number',
-      valueMarathi: '९८२२२३५०६७ , ९४०३५९०८९०, ८२०८००७६८८',
-      valueEnglish: '9822235067, 9403590890, 8208007688'
+      valueMarathi: '९८२२२३५०६९ , ९४०३५९०८९०, ८२०८००७६८८',
+      valueEnglish: '9822235069, 9403590890, 8208007688'
     },
     {
       labelMarathi: 'ईमेल',
