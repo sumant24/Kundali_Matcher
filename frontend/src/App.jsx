@@ -46,8 +46,8 @@ export default function App() {
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
               Kundali Biodata & Ashtakoot Gun Milan Matcher &bull; Sumant Hemant Joshi
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-              Built with Python Flask REST API &bull; React &bull; Classical Parashari Ashtakoot Engine
+            <div style={{ fontSize: '0.80rem', color: 'var(--text-muted)', marginTop: '4px', fontWeight: 500 }}>
+              Developed and Designed by Sumant Joshi
             </div>
           </div>
         </footer>

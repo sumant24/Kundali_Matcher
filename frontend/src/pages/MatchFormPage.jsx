@@ -322,7 +322,7 @@ export default function MatchFormPage() {
                 <span style={{ fontFamily: 'var(--font-devanagari)' }}>वधूचे पूर्ण नाव</span>
                 <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>/</span>
                 <span>Partner's Full Name</span>
-                <span style={{ color: '#D32F2F', marginLeft: '4px', fontWeight: 800, fontSize: '0.95rem' }}>*</span>
+                <span style={{ color: '#E53935', marginLeft: '4px', fontWeight: 900, fontSize: '1.15rem', verticalAlign: '-2px', lineHeight: 1 }} title="Required">*</span>
               </label>
               <input
                 type="text"
@@ -346,7 +346,7 @@ export default function MatchFormPage() {
                   <span style={{ fontFamily: 'var(--font-devanagari)' }}>राशी</span>
                   <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>/</span>
                   <span>Rashi</span>
-                  <span style={{ color: '#D32F2F', marginLeft: '4px', fontWeight: 800, fontSize: '0.95rem' }}>*</span>
+                  <span style={{ color: '#E53935', marginLeft: '4px', fontWeight: 900, fontSize: '1.15rem', verticalAlign: '-2px', lineHeight: 1 }} title="Required">*</span>
                 </label>
                 <select
                   value={form.rashi}
@@ -373,7 +373,7 @@ export default function MatchFormPage() {
                   <span style={{ fontFamily: 'var(--font-devanagari)' }}>नक्षत्र</span>
                   <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>/</span>
                   <span>Nakshatra</span>
-                  <span style={{ color: '#D32F2F', marginLeft: '4px', fontWeight: 800, fontSize: '0.95rem' }}>*</span>
+                  <span style={{ color: '#E53935', marginLeft: '4px', fontWeight: 900, fontSize: '1.15rem', verticalAlign: '-2px', lineHeight: 1 }} title="Required">*</span>
                 </label>
                 <select
                   value={form.nakshatra}

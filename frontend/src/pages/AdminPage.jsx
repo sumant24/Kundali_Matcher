@@ -361,7 +361,7 @@ export default function AdminPage() {
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>
                   <span>पासवर्ड / Admin Password</span>
-                  <span style={{ color: '#D32F2F', marginLeft: '4px', fontWeight: 800, fontSize: '0.95rem' }}>*</span>
+                  <span style={{ color: '#E53935', marginLeft: '4px', fontWeight: 900, fontSize: '1.15rem', verticalAlign: '-2px', lineHeight: 1 }} title="Required">*</span>
                 </label>
                 <div style={{ position: 'relative' }}>
                   <input
@@ -435,7 +435,7 @@ export default function AdminPage() {
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>
                   <span>६-अंकी OTP / 6-Digit Verification Code</span>
-                  <span style={{ color: '#D32F2F', marginLeft: '4px', fontWeight: 800, fontSize: '0.95rem' }}>*</span>
+                  <span style={{ color: '#E53935', marginLeft: '4px', fontWeight: 900, fontSize: '1.15rem', verticalAlign: '-2px', lineHeight: 1 }} title="Required">*</span>
                 </label>
                 <input
                   type="text"
