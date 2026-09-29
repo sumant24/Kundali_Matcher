@@ -1,0 +1,26 @@
+# Varna mapping for 12 Rashis
+# Brahmin: Water signs (Karka, Vrishchik, Meena)
+# Kshatriya: Fire signs (Mesha, Simha, Dhanu)
+# Vaishya: Earth signs (Vrishabha, Kanya, Makara)
+# Shudra: Air signs (Mithuna, Tula, Kumbha)
+
+hierarchy:
+  Brahmin: 4
+  Kshatriya: 3
+  Vaishya: 2
+  Shudra: 1
+
+rashi_varna:
+  Mesha: Kshatriya
+  Vrishabha: Vaishya
+  Mithuna: Shudra
+  Karka: Brahmin
+  Simha: Kshatriya
+  Kanya: Vaishya
+  Tula: Shudra
+  Vrishchik: Brahmin
+  Vrishchika: Brahmin
+  Dhanu: Kshatriya
+  Makara: Vaishya
+  Kumbha: Shudra
+  Meena: Brahmin

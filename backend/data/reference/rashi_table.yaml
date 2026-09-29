@@ -1,0 +1,68 @@
+# 12 Rashis in classical order with planetary lords and elements
+rashis:
+  - Mesha
+  - Vrishabha
+  - Mithuna
+  - Karka
+  - Simha
+  - Kanya
+  - Tula
+  - Vrishchik
+  - Dhanu
+  - Makara
+  - Kumbha
+  - Meena
+
+details:
+  Mesha:
+    lord: Mars
+    element: Fire
+    english: Aries
+  Vrishabha:
+    lord: Venus
+    element: Earth
+    english: Taurus
+  Mithuna:
+    lord: Mercury
+    element: Air
+    english: Gemini
+  Karka:
+    lord: Moon
+    element: Water
+    english: Cancer
+  Simha:
+    lord: Sun
+    element: Fire
+    english: Leo
+  Kanya:
+    lord: Mercury
+    element: Earth
+    english: Virgo
+  Tula:
+    lord: Venus
+    element: Air
+    english: Libra
+  Vrishchik:
+    lord: Mars
+    element: Water
+    english: Scorpio
+  Vrishchika:
+    lord: Mars
+    element: Water
+    english: Scorpio
+  Dhanu:
+    lord: Jupiter
+    element: Fire
+    english: Sagittarius
+  Makara:
+    lord: Saturn
+    element: Earth
+    english: Capricorn
+  Kumbha:
+    lord: Saturn
+    element: Air
+    english: Aquarius
+  Meena:
+    lord: Jupiter
+    element: Water
+    english: Pisces

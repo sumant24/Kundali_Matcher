@@ -1,0 +1,49 @@
+# Gana classification for Nakshatras and 6-point compatibility matrix
+nakshatra_gana:
+  Ashwini: Deva
+  Bharani: Manushya
+  Krittika: Rakshasa
+  Rohini: Manushya
+  Mrigashira: Deva
+  Ardra: Manushya
+  Punarvasu: Deva
+  Pushya: Deva
+  Ashlesha: Rakshasa
+  Magha: Rakshasa
+  Purva Phalguni: Manushya
+  Purva_Phalguni: Manushya
+  Uttara Phalguni: Manushya
+  Uttara_Phalguni: Manushya
+  Hasta: Deva
+  Chitra: Rakshasa
+  Swati: Deva
+  Vishakha: Rakshasa
+  Anuradha: Deva
+  Jyeshtha: Rakshasa
+  Mula: Rakshasa
+  Purva Ashadha: Manushya
+  Purva_Ashadha: Manushya
+  Uttara Ashadha: Manushya
+  Uttara_Ashadha: Manushya
+  Shravana: Deva
+  Dhanishta: Rakshasa
+  Shatabhisha: Rakshasa
+  Purva Bhadrapada: Manushya
+  Purva_Bhadrapada: Manushya
+  Uttara Bhadrapada: Manushya
+  Uttara_Bhadrapada: Manushya
+  Revati: Deva
+
+compatibility:
+  Deva:
+    Deva: 6
+    Manushya: 6
+    Rakshasa: 1
+  Manushya:
+    Deva: 5
+    Manushya: 6
+    Rakshasa: 0
+  Rakshasa:
+    Deva: 1
+    Manushya: 0
+    Rakshasa: 6

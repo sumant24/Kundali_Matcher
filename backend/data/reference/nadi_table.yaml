@@ -1,0 +1,38 @@
+# Nadi assignment for 27 Nakshatras
+# Each Nakshatra maps to one of 3 Nadis: Aadi, Madhya, Antya
+# Same Nadi = Nadi Dosha (0 points). Different Nadi = 8 points.
+
+nakshatra_nadi:
+  Ashwini: Aadi
+  Bharani: Madhya
+  Krittika: Antya
+  Rohini: Aadi
+  Mrigashira: Madhya
+  Ardra: Antya
+  Punarvasu: Aadi
+  Pushya: Madhya
+  Ashlesha: Antya
+  Magha: Aadi
+  Purva Phalguni: Madhya
+  Purva_Phalguni: Madhya
+  Uttara Phalguni: Antya
+  Uttara_Phalguni: Antya
+  Hasta: Aadi
+  Chitra: Madhya
+  Swati: Antya
+  Vishakha: Aadi
+  Anuradha: Madhya
+  Jyeshtha: Antya
+  Mula: Aadi
+  Purva Ashadha: Madhya
+  Purva_Ashadha: Madhya
+  Uttara Ashadha: Antya
+  Uttara_Ashadha: Antya
+  Shravana: Aadi
+  Dhanishta: Madhya
+  Shatabhisha: Antya
+  Purva Bhadrapada: Aadi
+  Purva_Bhadrapada: Aadi
+  Uttara Bhadrapada: Madhya
+  Uttara_Bhadrapada: Madhya
+  Revati: Antya

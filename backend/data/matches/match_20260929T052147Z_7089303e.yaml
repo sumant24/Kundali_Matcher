@@ -1,0 +1,105 @@
+match_id: 7089303e-4107-4009-8560-5c6301ffe9a5
+created_at: '2026-09-29T05:21:47.082499+00:00'
+groom:
+  full_name: Sumant Hemant Joshi
+  rashi: Kumbha
+  nakshatra: Purva Bhadrapada
+  nakshatra_charan: 1
+  lagna: Vrishchik
+  mars_house_from_lagna: 1
+  mars_house_from_moon: 10
+bride:
+  full_name: Test Partner
+  rashi: Mesha
+  nakshatra: Bharani
+  nakshatra_charan: 2
+  lagna: Simha
+  mars_house_from_lagna: 7
+  mars_house_from_moon: 3
+koot_scores:
+  varna:
+    score: 0
+    max: 1
+    groom_value: Shudra
+    bride_value: Kshatriya
+    detail: 'Groom: Shudra, Bride: Kshatriya. Bride Varna is higher than Groom Varna
+      (0/1).'
+  vashya:
+    score: 1.0
+    max: 2
+    groom_value: Manav
+    bride_value: Chatushpada
+    detail: 'Groom: Manav, Bride: Chatushpada. Moderate compatibility and amenable
+      temperament (1/2).'
+  tara:
+    score: 1.5
+    max: 3
+    groom_to_bride: 'Pratyak (Tara #5)'
+    bride_to_groom: 'Sadhana (Tara #6)'
+    detail: 'Groom to Bride: Pratyak (Inauspicious), Bride to Groom: Sadhana (Auspicious).'
+  yoni:
+    score: 0.0
+    max: 4
+    groom_value: Lion
+    bride_value: Elephant
+    detail: 'Groom Yoni: Lion, Bride Yoni: Elephant. Sworn enemy archetypes — severe
+      physical mismatch (0/4).'
+  graha_maitri:
+    score: 0.5
+    max: 5
+    groom_value: Saturn
+    bride_value: Mars
+    detail: 'Groom Moon Lord: Saturn, Bride Moon Lord: Mars. One neutral, one enemy
+      — minor friction (0.5/5).'
+  gana:
+    score: 6.0
+    max: 6
+    groom_value: Manushya
+    bride_value: Manushya
+    detail: 'Groom Gana: Manushya, Bride Gana: Manushya. Compatible temperaments —
+      harmonious social & domestic life (6/6).'
+  bhakoot:
+    score: 7
+    max: 7
+    distance: 3
+    dosha: false
+    pair_name: 3-11 (Trine / Upachaya)
+    detail: 'Rashi position: 3-11 (Trine / Upachaya). Good financial gains and cooperation
+      (7/7).'
+  nadi:
+    score: 8
+    max: 8
+    groom_value: Aadi
+    bride_value: Madhya
+    dosha: false
+    detail: 'Groom Nadi: Aadi, Bride Nadi: Madhya. Different Nadis (Aadi and Madhya)
+      — No Nadi Dosha (8/8). Excellent physiological compatibility.'
+total_score: 24.0
+total_max: 36
+doshas:
+  nadi_dosha: false
+  bhakoot_dosha: false
+  manglik_match:
+    groom_manglik: true
+    bride_manglik: true
+    compatible: true
+    groom_details:
+      is_manglik: true
+      from_lagna: true
+      from_moon: false
+      mars_lagna_house: 1
+      mars_moon_house: 10
+      severity: Moderate (Lagna Manglik)
+    bride_details:
+      is_manglik: true
+      from_lagna: true
+      from_moon: false
+      mars_lagna_house: 7
+      mars_moon_house: 3
+      severity: Moderate (Lagna Manglik)
+    detail: Both horoscopes are Manglik — Dosha is mutually cancelled (Kuja Dosha
+      Samya).
+interpretation: Average match (18–24) — acceptable with mature mutual cooperation
+alternative_info:
+  notes: Automated verification test
+  entered_by: UI Match Form

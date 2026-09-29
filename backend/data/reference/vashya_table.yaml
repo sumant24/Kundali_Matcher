@@ -1,0 +1,47 @@
+# Vashya Group assignment and Compatibility Matrix
+rashi_vashya:
+  Mesha: Chatushpada
+  Vrishabha: Chatushpada
+  Mithuna: Manav
+  Karka: Jalachar
+  Simha: Vanachar
+  Kanya: Manav
+  Tula: Manav
+  Vrishchik: Keeta
+  Vrishchika: Keeta
+  Dhanu: Manav
+  Makara: Jalachar
+  Kumbha: Manav
+  Meena: Jalachar
+
+compatibility:
+  Chatushpada:
+    Chatushpada: 2
+    Manav: 1
+    Jalachar: 1
+    Vanachar: 0
+    Keeta: 1
+  Manav:
+    Chatushpada: 1
+    Manav: 2
+    Jalachar: 1
+    Vanachar: 0
+    Keeta: 1
+  Jalachar:
+    Chatushpada: 1
+    Manav: 1
+    Jalachar: 2
+    Vanachar: 0
+    Keeta: 1
+  Vanachar:
+    Chatushpada: 0
+    Manav: 0
+    Jalachar: 0
+    Vanachar: 2
+    Keeta: 0
+  Keeta:
+    Chatushpada: 1
+    Manav: 1
+    Jalachar: 1
+    Vanachar: 0
+    Keeta: 2

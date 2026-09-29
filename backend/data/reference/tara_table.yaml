@@ -1,0 +1,40 @@
+# Tara cycle table (9 Taras based on remainder distance % 9)
+# Favorable: 1 (Janma), 2 (Sampat), 4 (Kshema), 6 (Sadhana), 8 (Mitra), 9 (Param Mitra)
+# Unfavorable: 3 (Vipat), 5 (Pratyak), 7 (Naidhana)
+taras:
+  1:
+    name: "Janma"
+    favorable: true
+    description: "Birth star / identity"
+  2:
+    name: "Sampat"
+    favorable: true
+    description: "Wealth and prosperity"
+  3:
+    name: "Vipat"
+    favorable: false
+    description: "Danger, losses and hardships"
+  4:
+    name: "Kshema"
+    favorable: true
+    description: "Well-being, security and comfort"
+  5:
+    name: "Pratyak"
+    favorable: false
+    description: "Obstacles and disputes"
+  6:
+    name: "Sadhana"
+    favorable: true
+    description: "Achievement and success"
+  7:
+    name: "Naidhana"
+    favorable: false
+    description: "Destruction, extreme affliction"
+  8:
+    name: "Mitra"
+    favorable: true
+    description: "Friendship and companionship"
+  9:
+    name: "Param Mitra"
+    favorable: true
+    description: "Great friendship, highest harmony"
