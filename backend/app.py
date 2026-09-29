@@ -8,9 +8,8 @@ import os
 
 def create_app():
     dist_dir = Path(__file__).resolve().parent.parent / "frontend" / "dist"
-    static_folder = str(dist_dir) if dist_dir.exists() else None
 
-    app = Flask(__name__, static_folder=static_folder, static_url_path="")
+    app = Flask(__name__)
     CORS(app, resources={r"/api/*": {"origins": CORS_ORIGINS}})
 
     app.register_blueprint(biodata_bp)
@@ -21,11 +20,11 @@ def create_app():
     def health():
         return jsonify({"status": "healthy", "service": "Kundali Biodata & Gun Milan Matcher API"}), 200
 
-    if static_folder and dist_dir.exists():
+    if dist_dir.exists():
         @app.route("/", defaults={"path": ""})
         @app.route("/<path:path>")
         def serve_frontend(path):
-            if path != "" and (dist_dir / path).exists():
+            if path != "" and (dist_dir / path).is_file():
                 return send_from_directory(dist_dir, path)
             return send_from_directory(dist_dir, "index.html")
     else:
