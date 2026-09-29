@@ -48,6 +48,12 @@ const NAKSHATRA_LIST = [
   { name: 'Revati', marathi: 'रेवती' },
 ];
 
+const GANA_LIST = [
+  { name: 'Manushya', marathi: 'मनुष्य' },
+  { name: 'Deva', marathi: 'देव' },
+  { name: 'Rakshasa', marathi: 'राक्षस' },
+];
+
 export default function MatchFormPage() {
   const navigate = useNavigate();
 
@@ -56,9 +62,8 @@ export default function MatchFormPage() {
     rashi: 'Mesha',
     nakshatra: 'Bharani',
     charan: 1,
-    lagna: 'Simha',
-    marsFromLagna: 1,
-    marsFromMoon: 10,
+    gana: 'Manushya',
+    gotra: '',
     isManglikQuick: 'no',
     notes: '',
   });
@@ -73,9 +78,8 @@ export default function MatchFormPage() {
         rashi: 'Mithuna',
         nakshatra: 'Mrigashira',
         charan: 3,
-        lagna: 'Tula',
-        marsFromLagna: 3,
-        marsFromMoon: 5,
+        gana: 'Deva',
+        gotra: 'कश्यप / Kashyap',
         isManglikQuick: 'no',
         notes: 'उच्च गुण जुळवणी नमुना / High compatibility demonstration chart',
       });
@@ -85,11 +89,21 @@ export default function MatchFormPage() {
         rashi: 'Meena',
         nakshatra: 'Purva Bhadrapada',
         charan: 4,
-        lagna: 'Dhanu',
-        marsFromLagna: 1,
-        marsFromMoon: 10,
+        gana: 'Manushya',
+        gotra: 'वसिष्ठ / Vashistha',
         isManglikQuick: 'yes',
         notes: 'समान नाडी (आदि नाडी) दोष नमुना / Same Nadi (Aadi Nadi) demonstration chart',
+      });
+    } else if (type === 'sagotra_dosha') {
+      setForm({
+        fullName: 'राधिका जोशी / Radhika Joshi',
+        rashi: 'Dhanu',
+        nakshatra: 'Mula',
+        charan: 1,
+        gana: 'Rakshasa',
+        gotra: 'चांद्रात्र / Chandratr',
+        isManglikQuick: 'no',
+        notes: 'सगोत्र दोष नमुना (समान गोत्र: चांद्रात्र) / Sagotra Dosha demonstration chart',
       });
     } else if (type === 'bhakoot_dosha') {
       setForm({
@@ -97,10 +111,9 @@ export default function MatchFormPage() {
         rashi: 'Karka',
         nakshatra: 'Pushya',
         charan: 2,
-        lagna: 'Karka',
-        marsFromLagna: 4,
-        marsFromMoon: 7,
-        isManglikQuick: 'yes',
+        gana: 'Deva',
+        gotra: 'अत्री / Atri',
+        isManglikQuick: 'anshik',
         notes: '६-८ षडाष्टक भकूट दोष नमुना / 6-8 Shadashtak Bhakoot Dosha demonstration chart',
       });
     }
@@ -112,18 +125,19 @@ export default function MatchFormPage() {
       setError('कृपया वधूचे नाव प्रविष्ट करा / Please enter the partner\'s full name.');
       return;
     }
+    if (!form.gotra.trim()) {
+      setError('कृपया गोत्र प्रविष्ट करा / Please enter the partner\'s Gotra.');
+      return;
+    }
 
     setLoading(true);
     setError(null);
 
-    let marsLagna = parseInt(form.marsFromLagna, 10);
-    let marsMoon = parseInt(form.marsFromMoon, 10);
-    if (form.isManglikQuick === 'yes' && ![1, 2, 4, 7, 8, 12].includes(marsLagna)) {
-      marsLagna = 1;
-    } else if (form.isManglikQuick === 'no' && [1, 2, 4, 7, 8, 12].includes(marsLagna)) {
-      marsLagna = 3;
-      marsMoon = 5;
-    }
+    const manglikStatusMap = {
+      no: 'Non-Manglik',
+      yes: 'Manglik',
+      anshik: 'Anshik',
+    };
 
     const payload = {
       bride: {
@@ -131,9 +145,12 @@ export default function MatchFormPage() {
         rashi: form.rashi,
         nakshatra: form.nakshatra,
         nakshatra_charan: parseInt(form.charan, 10),
-        lagna: form.lagna,
-        mars_house_from_lagna: marsLagna,
-        mars_house_from_moon: marsMoon,
+        gana: form.gana,
+        gotra: form.gotra.trim() || undefined,
+        manglik_status: manglikStatusMap[form.isManglikQuick] || 'Non-Manglik',
+        lagna: 'Vrishchik',
+        mars_house_from_lagna: form.isManglikQuick === 'yes' ? 1 : 3,
+        mars_house_from_moon: form.isManglikQuick === 'yes' ? 10 : 5,
       },
       notes: form.notes.trim() || undefined,
     };
@@ -232,6 +249,14 @@ export default function MatchFormPage() {
           >
             नाडी दोष / Nadi Dosha
           </button>
+          <button
+            type="button"
+            onClick={() => handleQuickPreset('sagotra_dosha')}
+            className="btn btn-secondary btn-sm"
+            style={{ border: '1px solid #E57373', color: '#C62828' }}
+          >
+            सगोत्र दोष / Sagotra Dosha
+          </button>
         </div>
       </div>
 
@@ -259,20 +284,24 @@ export default function MatchFormPage() {
               <strong style={{ color: 'var(--primary-navy)' }}>कुंभ / Kumbha (Aquarius)</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-light)' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>नक्षत्र / Nakshatra:</span>
-              <strong style={{ color: 'var(--primary-navy)' }}>पूर्व भाद्रपदा (चरण १) / Purva Bhadrapada</strong>
+              <span style={{ color: 'var(--text-secondary)' }}>नाड / Nad:</span>
+              <strong style={{ color: 'var(--accent-gold-dark)' }}>आद्य / Adya</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-light)' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>नाडी / Nadi:</span>
-              <strong style={{ color: 'var(--accent-gold-dark)' }}>आदि नाडी / Aadi Nadi</strong>
+              <span style={{ color: 'var(--text-secondary)' }}>नक्षत्र / Nakshatra:</span>
+              <strong style={{ color: 'var(--primary-navy)' }}>पूर्व भाद्रपदा (चरण १) / Purva Bhadrapada</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-light)' }}>
               <span style={{ color: 'var(--text-secondary)' }}>गण / Gana:</span>
               <strong style={{ color: 'var(--primary-navy)' }}>मनुष्य गण / Manushya Gana</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-light)' }}>
-              <span style={{ color: 'var(--text-secondary)' }}>लग्न / Lagna:</span>
-              <strong style={{ color: 'var(--primary-navy)' }}>वृश्चिक / Vrishchik (Scorpio)</strong>
+              <span style={{ color: 'var(--text-secondary)' }}>गोत्र / Gotra:</span>
+              <strong style={{ color: 'var(--primary-navy)' }}>चांद्रात्र / Chandratr</strong>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-light)' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>कुलदेवता / Kuladevata:</span>
+              <strong style={{ color: 'var(--primary-navy)', textAlign: 'right', maxWidth: '60%' }}>पिंगलाई देवी, नेरपिंगलाई आणि व्यंकटेश बालाजी / Pinglai Devi & Venkatesh Balaji</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0' }}>
               <span style={{ color: 'var(--text-secondary)' }}>मंगळ स्थिती / Manglik:</span>
@@ -396,13 +425,14 @@ export default function MatchFormPage() {
               </div>
             </div>
 
-            {/* Charan & Lagna */}
+            {/* Charan & Gana */}
             <div className="form-grid-2">
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>
                   <span style={{ fontFamily: 'var(--font-devanagari)' }}>नक्षत्र चरण</span>
                   <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>/</span>
                   <span>Charan</span>
+                  <span style={{ color: '#E53935', marginLeft: '4px', fontWeight: 900, fontSize: '1.15rem', verticalAlign: '-2px', lineHeight: 1 }} title="Required">*</span>
                 </label>
                 <select
                   value={form.charan}
@@ -425,13 +455,14 @@ export default function MatchFormPage() {
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>
-                  <span style={{ fontFamily: 'var(--font-devanagari)' }}>लग्न</span>
+                  <span style={{ fontFamily: 'var(--font-devanagari)' }}>गण</span>
                   <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>/</span>
-                  <span>Lagna (Ascendant)</span>
+                  <span>Gana</span>
+                  <span style={{ color: '#E53935', marginLeft: '4px', fontWeight: 900, fontSize: '1.15rem', verticalAlign: '-2px', lineHeight: 1 }} title="Required">*</span>
                 </label>
                 <select
-                  value={form.lagna}
-                  onChange={(e) => setForm({ ...form, lagna: e.target.value })}
+                  value={form.gana}
+                  onChange={(e) => setForm({ ...form, gana: e.target.value })}
                   style={{
                     width: '100%',
                     padding: '10px 12px',
@@ -441,13 +472,40 @@ export default function MatchFormPage() {
                     backgroundColor: '#FFFFFF'
                   }}
                 >
-                  {RASHI_LIST.map((r) => (
-                    <option key={r.name} value={r.name}>
-                      {r.marathi} / {r.name} ({r.english})
+                  {GANA_LIST.map((g) => (
+                    <option key={g.name} value={g.name}>
+                      {g.marathi} गण / {g.name} Gana
                     </option>
                   ))}
                 </select>
               </div>
+            </div>
+
+            {/* Gotra Field */}
+            <div>
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '6px' }}>
+                <span style={{ fontFamily: 'var(--font-devanagari)' }}>गोत्र</span>
+                <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>/</span>
+                <span>Gotra</span>
+                <span style={{ color: '#E53935', marginLeft: '4px', fontWeight: 900, fontSize: '1.15rem', verticalAlign: '-2px', lineHeight: 1 }} title="Required">*</span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginLeft: '6px', fontWeight: 400 }}>
+                  (सगोत्र पडताळणी / for Sagotra check)
+                </span>
+              </label>
+              <input
+                type="text"
+                value={form.gotra}
+                onChange={(e) => setForm({ ...form, gotra: e.target.value })}
+                required
+                placeholder="उदा. कश्यप / Kashyap, भारद्वाज / Bharadwaj"
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--border-medium)',
+                  fontSize: '0.95rem'
+                }}
+              />
             </div>
 
             {/* Manglik status selector in Marathi / English */}
@@ -461,6 +519,7 @@ export default function MatchFormPage() {
                 <span style={{ fontFamily: 'var(--font-devanagari)' }}>मंगळ स्थिती</span>
                 <span style={{ color: 'var(--text-muted)', margin: '0 4px' }}>/</span>
                 <span>Known Manglik Status</span>
+                <span style={{ color: '#E53935', marginLeft: '4px', fontWeight: 900, fontSize: '1.15rem', verticalAlign: '-2px', lineHeight: 1 }} title="Required">*</span>
               </label>
               <div style={{ display: 'flex', gap: '16px', fontSize: '0.9rem', flexWrap: 'wrap' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
@@ -472,6 +531,16 @@ export default function MatchFormPage() {
                     onChange={() => setForm({ ...form, isManglikQuick: 'no' })}
                   />
                   <span>नाही / No (Non-Manglik)</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="isManglikQuick"
+                    value="anshik"
+                    checked={form.isManglikQuick === 'anshik'}
+                    onChange={() => setForm({ ...form, isManglikQuick: 'anshik' })}
+                  />
+                  <span>आंशिक / Anshik (Partial)</span>
                 </label>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
                   <input

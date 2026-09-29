@@ -62,7 +62,7 @@ export default function BiodataPage() {
     { labelMarathi: 'जन्मवार', labelEnglish: 'Day of Birth', valueMarathi: personal.day_of_birth_marathi || 'शुक्रवार', valueEnglish: personal.day_of_birth || 'Friday' },
     { labelMarathi: 'जन्मवेळ', labelEnglish: 'Time of Birth', valueMarathi: personal.time_of_birth_marathi || 'सकाळी ११:०५', valueEnglish: personal.time_of_birth || '11:05 am' },
     { labelMarathi: 'जन्मस्थळ', labelEnglish: 'Place of Birth', valueMarathi: personal.place_of_birth_marathi || 'नागपूर, महाराष्ट्र', valueEnglish: personal.place_of_birth || 'Nagpur, Maharashtra' },
-    { labelMarathi: 'उंची', labelEnglish: 'Height', valueMarathi: '६ फूट ३ इंच', valueEnglish: "6'3\" (190.5 cm)" },
+    { labelMarathi: 'उंची', labelEnglish: 'Height', valueMarathi: '६ फूट १ इंच', valueEnglish: "6'1\" (185.5 cm)" },
     { labelMarathi: 'वर्ण', labelEnglish: 'Complexion', valueMarathi: personal.complexion_marathi || 'गौर (गोरा)', valueEnglish: personal.complexion || 'Fair' },
     { labelMarathi: 'रक्तगट', labelEnglish: 'Blood Group', valueMarathi: 'A+', valueEnglish: 'A+' },
     { labelMarathi: 'वैवाहिक स्थिती', labelEnglish: 'Marital Status', valueMarathi: personal.marital_status_marathi || 'अविवाहित', valueEnglish: personal.marital_status || 'Never Married' },
@@ -91,8 +91,8 @@ export default function BiodataPage() {
     {
       labelMarathi: 'वार्षिक उत्पन्न',
       labelEnglish: 'Annual Income',
-      valueMarathi: education_profession.annual_income_marathi || '₹८.५ लाख',
-      valueEnglish: education_profession.annual_income || '₹8.5 Lakh'
+      valueMarathi: education_profession.annual_income_marathi || '₹८ लाख',
+      valueEnglish: education_profession.annual_income || '₹8 Lakh'
     },
     {
       labelMarathi: 'कामाचे ठिकाण',
@@ -130,8 +130,8 @@ export default function BiodataPage() {
     {
       labelMarathi: 'भावंडे',
       labelEnglish: 'Siblings',
-      valueMarathi: family.siblings_marathi || 'बहीण - १ (विशेष क्षमता असलेले मूल)',
-      valueEnglish: family.siblings || 'Sister - 1 (special ability child)'
+      valueMarathi: family.siblings_marathi || 'बहीण - १',
+      valueEnglish: family.siblings || 'Sister - 1'
     },
     {
       labelMarathi: 'मूळ गाव',
@@ -155,10 +155,22 @@ export default function BiodataPage() {
       valueEnglish: 'Kumbha (Aquarius)'
     },
     {
+      labelMarathi: 'नाड',
+      labelEnglish: 'Nad',
+      valueMarathi: astrology.nad_marathi || 'आद्य',
+      valueEnglish: astrology.nad || 'Adya'
+    },
+    {
       labelMarathi: 'नक्षत्र',
       labelEnglish: 'Nakshatra',
       valueMarathi: 'पूर्व भाद्रपदा (चरण १)',
       valueEnglish: 'Purva Bhadrapada (Charan 1)'
+    },
+    {
+      labelMarathi: 'गण',
+      labelEnglish: 'Gana',
+      valueMarathi: astrology.gana_marathi || 'मनुष्य गण',
+      valueEnglish: astrology.gana || 'Manushya Gana'
     },
     {
       labelMarathi: 'गोत्र',
@@ -171,12 +183,6 @@ export default function BiodataPage() {
       labelEnglish: 'Kuladevata',
       valueMarathi: astrology.kuladevata_marathi || 'पिंगलाई देवी, नेरपिंगलाई आणि व्यंकटेश बालाजी',
       valueEnglish: astrology.kuladevata || 'Pinglai Devi, Nerpinglai And Venkatesh Balaji'
-    },
-    {
-      labelMarathi: 'लग्न',
-      labelEnglish: 'Lagna (Ascendant)',
-      valueMarathi: astrology.lagna_marathi || 'वृश्चिक',
-      valueEnglish: `${astrology.lagna || 'Vrishchik'} (${astrology.lagna_english || 'Scorpio'})`
     },
     {
       labelMarathi: 'मंगळ स्थिती',
@@ -194,10 +200,46 @@ export default function BiodataPage() {
       valueEnglish: contact.address || 'Abhyankar Nagar, Nagpur, Maharashtra'
     },
     {
+      labelMarathi: 'संपत्ति घर',
+      labelEnglish: 'Property House',
+      valueMarathi: contact.property_house_marathi || 'स्वतःचे घर (तळमजला + १ मजला)',
+      valueEnglish: contact.property_house || 'Own house (Ground + 1 Floor)',
+      subMarathi: contact.property_house_note_marathi || 'तळमजला भाड्याने दिला आहे आणि आम्ही पहिल्या मजल्यावर राहतो.',
+      subEnglish: contact.property_house_note || 'Ground floor is on rent and live on 1st floor'
+    },
+    {
       labelMarathi: 'संपर्क क्रमांक',
       labelEnglish: 'Contact Number',
-      valueMarathi: '९८२२२३५०६९ , ९४०३५९०८९०, ८२०८००७६८८',
-      valueEnglish: '9822235069, 9403590890, 8208007688'
+      valueMarathi: 'वडिलांचा: ९८२२२३५०६९ | आईचा: ९४०३५९०८९० | मुलगा: ८२०८००७६८८',
+      valueEnglish: "Father's no - 9822235069, Mother's no - 9403590890, Son's no - 8208007688",
+      customValue: (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '2px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px' }}>
+            <span style={{ fontSize: '0.86rem', color: 'var(--text-secondary)' }}>
+              <span style={{ fontFamily: 'var(--font-devanagari)', color: 'var(--primary-navy)', fontWeight: 600 }}>वडिलांचा</span> / Father's no:
+            </span>
+            <a href="tel:9822235069" style={{ color: 'var(--primary-navy)', textDecoration: 'none', fontWeight: 700, letterSpacing: '0.03em' }}>
+              9822235069
+            </a>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px' }}>
+            <span style={{ fontSize: '0.86rem', color: 'var(--text-secondary)' }}>
+              <span style={{ fontFamily: 'var(--font-devanagari)', color: 'var(--primary-navy)', fontWeight: 600 }}>आईचा</span> / Mother's no:
+            </span>
+            <a href="tel:9403590890" style={{ color: 'var(--primary-navy)', textDecoration: 'none', fontWeight: 700, letterSpacing: '0.03em' }}>
+              9403590890
+            </a>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px' }}>
+            <span style={{ fontSize: '0.86rem', color: 'var(--text-secondary)' }}>
+              <span style={{ fontFamily: 'var(--font-devanagari)', color: 'var(--primary-navy)', fontWeight: 600 }}>मुलगा</span> / Son's no:
+            </span>
+            <a href="tel:8208007688" style={{ color: 'var(--primary-navy)', textDecoration: 'none', fontWeight: 700, letterSpacing: '0.03em' }}>
+              8208007688
+            </a>
+          </div>
+        </div>
+      )
     },
     {
       labelMarathi: 'ईमेल',

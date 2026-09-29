@@ -98,5 +98,34 @@ export default function DoshaBadge({ type, present, details, compatible = true }
     );
   }
 
+  if (type === 'sagotra') {
+    return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+        padding: '10px 14px',
+        borderRadius: 'var(--radius-md)',
+        backgroundColor: present ? '#FFEBEE' : '#E8F5E9',
+        border: `1px solid ${present ? '#FFCDD2' : '#C8E6C9'}`,
+        color: present ? '#C62828' : '#1B5E20'
+      }}>
+        {present ? <AlertTriangle size={20} /> : <CheckCircle2 size={20} />}
+        <div>
+          <div style={{ fontWeight: 700, fontSize: '0.88rem' }}>
+            {present ? (
+              <span>सगोत्र दोष उपस्थित / Sagotra Dosha Present (Prohibited)</span>
+            ) : (
+              <span>सगोत्र दोष नाही / Sagotra Free (Different Gotras)</span>
+            )}
+          </div>
+          <div style={{ fontSize: '0.78rem', opacity: 0.9, marginTop: '2px' }}>
+            {details || (present ? 'समान गोत्र असल्याने विवाह शास्त्रानुसार वर्ज्य मानला जातो / Same Gotra alliance is traditionally prohibited.' : 'भिन्न गोत्र, विवाह अनुकूल / Different Gotras, auspicious alliance.')}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return null;
 }

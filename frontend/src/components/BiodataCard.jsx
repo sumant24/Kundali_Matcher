@@ -100,15 +100,44 @@ export default function BiodataCard({ titleMarathi, titleEnglish, icon: Icon, it
               color: 'var(--text-main)',
               lineHeight: 1.45
             }}>
-              {item.valueMarathi && item.valueEnglish ? (
+              {item.customValue ? (
+                item.customValue
+              ) : item.valueMarathi && item.valueEnglish ? (
                 <div>
-                  <span style={{ fontFamily: 'var(--font-devanagari)', color: 'var(--primary-navy)', fontWeight: 700 }}>
-                    {item.valueMarathi}
-                  </span>
-                  <span style={{ color: 'var(--accent-gold)', margin: '0 6px', fontWeight: 400 }}>/</span>
-                  <span style={{ color: 'var(--text-main)', fontWeight: 500 }}>
-                    {item.valueEnglish}
-                  </span>
+                  <div>
+                    <span style={{ fontFamily: 'var(--font-devanagari)', color: 'var(--primary-navy)', fontWeight: 700 }}>
+                      {item.valueMarathi}
+                    </span>
+                    <span style={{ color: 'var(--accent-gold)', margin: '0 6px', fontWeight: 400 }}>/</span>
+                    <span style={{ color: 'var(--text-main)', fontWeight: 500 }}>
+                      {item.valueEnglish}
+                    </span>
+                  </div>
+                  {(item.subMarathi || item.subEnglish) && (
+                    <div style={{
+                      marginTop: '8px',
+                      fontSize: '0.86rem',
+                      color: 'var(--text-secondary)',
+                      fontWeight: 500,
+                      lineHeight: 1.45,
+                      paddingTop: '6px',
+                      borderTop: '1px dashed var(--border-light)'
+                    }}>
+                      {item.subMarathi && (
+                        <span style={{ fontFamily: 'var(--font-devanagari)', color: 'var(--primary-navy)', fontWeight: 600 }}>
+                          {item.subMarathi}
+                        </span>
+                      )}
+                      {item.subMarathi && item.subEnglish && (
+                        <span style={{ color: 'var(--accent-gold)', margin: '0 6px', fontWeight: 400 }}>/</span>
+                      )}
+                      {item.subEnglish && (
+                        <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>
+                          {item.subEnglish}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <span>{item.value || item.valueEnglish || item.valueMarathi || '—'}</span>

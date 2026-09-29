@@ -80,9 +80,13 @@ export const STATIC_BIODATA = {
     rashi: "Kumbha",
     rashi_marathi: "कुंभ",
     rashi_english: "Aquarius",
+    nad: "Adya",
+    nad_marathi: "आद्य",
     nakshatra: "Purva Bhadrapada",
     nakshatra_marathi: "पूर्व भाद्रपदा",
     nakshatra_charan: 1,
+    gana: "Manushya",
+    gana_marathi: "मनुष्य",
     gotra: "Chandratr",
     gotra_marathi: "चांद्रात्र",
     kuladevata: "Pinglai Devi, Nerpinglai And Venkatesh Balaji",
@@ -97,7 +101,14 @@ export const STATIC_BIODATA = {
   contact: {
     address: "Abhyankar Nagar, Nagpur, Maharashtra",
     address_marathi: "अभ्यंकर नगर, नागपूर, महाराष्ट्र",
-    phone: "9822235069, 9403590890, 8208007688",
+    property_house: "Own house (Ground + 1 Floor)",
+    property_house_marathi: "स्वतःचे घर (तळमजला + १ मजला)",
+    property_house_note: "Ground floor is on rent and live on 1st floor",
+    property_house_note_marathi: "तळमजला भाड्याने दिला आहे आणि आम्ही पहिल्या मजल्यावर राहतो.",
+    phone: "Father's no - 9822235069 , Mother's no - 9403590890 and Son's no - 8208007688",
+    phone_father: "9822235069",
+    phone_mother: "9403590890",
+    phone_son: "8208007688",
     email: "sumantjoshi24@gmail.com"
   }
 };
@@ -121,13 +132,18 @@ function runLocalMatch(payload) {
   const isPooja = (bride.full_name || '').includes('पूजा') || (bride.rashi === 'Mithuna');
   const isNadi = (bride.nakshatra === 'Purva Bhadrapada');
   const isBhakoot = (bride.rashi === 'Karka');
+  const brideGotra = (bride.gotra || '').toLowerCase();
+  const isSagotra = brideGotra.includes('chandratr') || brideGotra.includes('चांद्रात्र');
 
   let total_score = 29;
   let nadi_dosha = false;
   let bhakoot_dosha = false;
+  let sagotra_dosha = isSagotra;
   let interpretation = "उत्तम जुळवणी / Auspicious Match. Passes Vedic threshold with flying colors.";
 
-  if (isNadi) {
+  if (isSagotra) {
+    interpretation = "सगोत्र दोष उपस्थित — समान गोत्र (चांद्रात्र) असल्याने शास्त्रानुसार सगोत्र विवाह वर्ज्य मानला जातो / Sagotra Dosha present — alliance traditionally prohibited regardless of score.";
+  } else if (isNadi) {
     total_score = 16;
     nadi_dosha = true;
     interpretation = "नाडी दोष आढळला (०/८ गुण). ज्योतिषी सल्ला व शांती उपाय सुचवला जातो.";
@@ -149,6 +165,9 @@ function runLocalMatch(payload) {
       rashi: "Kumbha",
       nakshatra: "Purva Bhadrapada",
       nakshatra_charan: 1,
+      gana: "Manushya",
+      gotra: "Chandratr",
+      manglik_status: "Non-Manglik",
       lagna: "Vrishchik",
       mars_house_from_lagna: 3,
       is_manglik: false
@@ -158,13 +177,18 @@ function runLocalMatch(payload) {
       rashi: bride.rashi,
       nakshatra: bride.nakshatra,
       nakshatra_charan: bride.nakshatra_charan,
-      lagna: bride.lagna,
+      gana: bride.gana || "Manushya",
+      gotra: bride.gotra || "Kashyap",
+      manglik_status: bride.manglik_status || "Non-Manglik",
+      lagna: bride.lagna || "Vrishchik",
       mars_house_from_lagna: bride.mars_house_from_lagna,
-      is_manglik: [1, 2, 4, 7, 8, 12].includes(bride.mars_house_from_lagna)
+      is_manglik: bride.manglik_status === "Manglik" || [1, 2, 4, 7, 8, 12].includes(bride.mars_house_from_lagna)
     },
     total_score,
     total_max: 36,
     doshas: {
+      sagotra_dosha,
+      sagotra_detail: isSagotra ? "समान गोत्र (चांद्रात्र) — सगोत्र विवाह वर्ज्य / Same Gotra (Chandratr) — prohibited" : "भिन्न गोत्र, विवाह अनुकूल / Different Gotras — auspicious",
       nadi_dosha,
       bhakoot_dosha,
       manglik_match: {

@@ -215,6 +215,11 @@ export default function MatchResultPage() {
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 700, letterSpacing: '0.04em' }}>
               महत्त्वाचे दोष परीक्षण / Key Dosha Evaluations:
             </div>
+            <DoshaBadge
+              type="sagotra"
+              present={doshas?.sagotra_dosha}
+              details={doshas?.sagotra_detail}
+            />
             <DoshaBadge type="nadi" present={doshas?.nadi_dosha} />
             <DoshaBadge type="bhakoot" present={doshas?.bhakoot_dosha} />
             <DoshaBadge
@@ -222,6 +227,18 @@ export default function MatchResultPage() {
               compatible={doshas?.manglik_match?.compatible}
               details={doshas?.manglik_match?.detail}
             />
+            {doshas?.gana_warning && (
+              <div style={{
+                padding: '8px 12px',
+                borderRadius: 'var(--radius-sm)',
+                backgroundColor: '#FFF8E1',
+                border: '1px solid #FFE082',
+                fontSize: '0.8rem',
+                color: '#B78103'
+              }}>
+                ⚠️ <strong>गण पडताळणी / Gana Note:</strong> {doshas.gana_warning}
+              </div>
+            )}
           </div>
         </div>
       </div>

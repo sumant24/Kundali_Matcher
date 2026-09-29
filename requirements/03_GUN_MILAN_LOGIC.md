@@ -1,226 +1,165 @@
-# Gun Milan (Ashtakoot) Calculation Logic
+# Gun Milan (Ashtakoot) Calculation Logic — Updated
 
-This is the algorithm for `backend/core/gun_milan.py`. It is written as **framework-agnostic Python logic** — no Flask imports here — so it can be unit-tested in isolation and called from the API layer.
+## Why this update
+
+The classical Ashtakoot (36-guna) system is computed purely from each person's
+**Rashi (Moon sign)** and **Nakshatra (with Charan/Pada)**. Lagna is not one of
+the inputs to the 36-point koot calculation — it was previously used only as a
+shortcut to guess Manglik status from Mars's house position, which is not a
+reliable substitute for a full Manglik reading (that needs exact planetary
+degrees and aspects — Jupiter/Saturn/Rahu aspects on Mars, Venus's position,
+etc.). This version corrects that.
+
+- **Removed:** Lagna (Ascendant), and the Mars-house-from-Lagna /
+  Mars-house-from-Moon fields.
+- **Nakshatra** is now the anchor identity field in place of Lagna.
+- **Added Gana** — stated directly, as it would appear on a real biodata,
+  and cross-checked against the value that Nakshatra determines.
+- **Added Gotra** — powers a separate **Sagotra check**: a same-Gotra
+  alliance is treated as prohibited in most communities, regardless of
+  the numeric score.
+- **Manglik status is now a stated input** — taken from each person's own
+  astrologer/kundli reading — rather than derived in-app from a simplified
+  house count.
+
+---
 
 ## 1. Inputs Required (per person)
 
-| Field | Type | Example |
+| Field (Marathi / English) | Example | Used for |
 |---|---|---|
-| `rashi` | str | "Kumbha" |
-| `nakshatra` | str | "Purva Bhadrapada" |
-| `nakshatra_charan` | int (1–4) | 1 |
-| `lagna` | str | "Vrishchik" |
-| `mars_house_from_lagna` | int (1–12) | 1 |
-| `mars_house_from_moon` | int (1–12) | 10 |
+| राशी / Rashi | Kumbha | Varna, Vashya, Graha Maitri, Bhakoot |
+| नक्षत्र / Nakshatra | Purva Bhadrapada | Tara, Yoni, Gana, Nadi |
+| नक्षत्र चरण / Nakshatra Charan (1–4) | 1 | Yoni (fine-grained cases), display |
+| गण / Gana (Deva / Manushya / Rakshasa) | Manushya | Gana Koot — cross-checked against Nakshatra |
+| गोत्र / Gotra | Kashyap | Sagotra check (pass/fail, separate from the 36 points) |
+| मंगळ स्थिती / Manglik Status (Manglik / Non-Manglik / Anshik) | Anshik | Manglik compatibility check (pass/fail, separate from the 36 points) |
 
-## 2. Module Structure
+**On Gana:** Gana is astrologically fixed by Nakshatra — every one of the 27
+Nakshatras has one, unchanging Gana. It's still collected as a stated field
+(as it would appear on a biodata) purely so the app can flag a mismatch
+between what was stated and what the Nakshatra implies, rather than trusting
+either source blindly.
 
-```python
-# backend/core/gun_milan.py
+---
 
-from dataclasses import dataclass
-from typing import Dict, Any
-from core.yaml_store import load_reference_table
+## 2. The Eight Koots — Formulas
 
+**1. Varna (1 point)**
+Each Rashi maps to a Varna: Brahmin (highest) → Kshatriya → Vaishya →
+Shudra (lowest). Score = 1 if the groom's Varna rank is greater than or
+equal to the bride's Varna rank, else 0.
 
-@dataclass
-class Person:
-    full_name: str
-    rashi: str
-    nakshatra: str
-    nakshatra_charan: int
-    lagna: str
-    mars_house_from_lagna: int
-    mars_house_from_moon: int
+**2. Vashya (2 points)**
+Each Rashi belongs to one of five Vashya groups (Manav, Chatushpada,
+Jalachar, Vanachar, Keeta). Score is read from a fixed 5×5 Vashya
+compatibility matrix using the groom's and bride's groups — values range
+0 to 2 depending on how the two groups relate (self/friendly/neutral/hostile).
 
+**3. Tara (3 points)**
+Count the Nakshatras from the groom's to the bride's (inclusive, wrapping
+after 27), then take that count mod 9 (using 9 instead of 0) to get a
+"Tara" number 1–9. Repeat in the other direction (bride to groom). Each of
+the two Tara numbers is looked up as favorable or unfavorable. Score:
+both favorable = 3, one favorable = 1.5, none favorable = 0.
 
-def calculate_varna(groom: Person, bride: Person, ref: dict) -> dict:
-    """1 point max. Groom's Varna must be >= Bride's Varna in hierarchy."""
-    hierarchy = {"Brahmin": 4, "Kshatriya": 3, "Vaishya": 2, "Shudra": 1}
-    groom_varna = ref["varna_table"][groom.rashi]
-    bride_varna = ref["varna_table"][bride.rashi]
-    score = 1 if hierarchy[groom_varna] >= hierarchy[bride_varna] else 0
-    return {"score": score, "max": 1,
-            "detail": f"Groom Varna={groom_varna}, Bride Varna={bride_varna}"}
+**4. Yoni (4 points)**
+Each Nakshatra has one of 14 animal Yonis (e.g., Horse, Elephant, Cat,
+Rat). Score is read from a 14×14 Yoni compatibility matrix: same animal
+= 4 (best), friendly pair = 3, neutral = 2, enemy pair = 0–1 depending on
+the severity of the traditional enmity (e.g., Cat–Rat, Snake–Mongoose are
+worst-case = 0).
 
+**5. Graha Maitri (5 points)**
+Each Rashi has a ruling planet ("lord"). Score is read from the classical
+planetary friendship table (each planet is a friend, neutral, or enemy of
+every other) applied to the groom's Rashi-lord vs. the bride's Rashi-lord.
+Range: 0 (both lords enemies of each other) to 5 (same lord or mutual
+friends).
 
-def calculate_vashya(groom: Person, bride: Person, ref: dict) -> dict:
-    """2 points max. Based on Vashya-group compatibility matrix."""
-    g_group = ref["vashya_table"][groom.rashi]
-    b_group = ref["vashya_table"][bride.rashi]
-    score = ref["vashya_compatibility"][g_group][b_group]
-    return {"score": score, "max": 2,
-            "detail": f"Groom Vashya={g_group}, Bride Vashya={b_group}"}
+**6. Gana (6 points)**
+Each Nakshatra belongs to one of three Ganas: Deva, Manushya, or Rakshasa.
+Score is read from a fixed 3×3 Gana compatibility matrix — same Gana or
+Deva-Manushya pairings score highest; Deva-Rakshasa scores lowest (0).
 
+**7. Bhakoot (7 points)**
+Count the sign-distance from the groom's Rashi to the bride's Rashi
+(1–12, wrapping). Certain distances are considered afflicted
+— specifically 2nd/12th, 5th/9th, and 6th/8th positions from each other.
+If the distance falls in that afflicted set: score = 0 (Bhakoot Dosha).
+Otherwise: score = 7.
 
-def calculate_tara(groom: Person, bride: Person, ref: dict) -> dict:
-    """3 points max. Count of nakshatras between the two, both directions."""
-    nak_list = ref["nakshatra_order"]  # ordered list of 27 nakshatra names
-    g_idx = nak_list.index(groom.nakshatra)
-    b_idx = nak_list.index(bride.nakshatra)
+**8. Nadi (8 points, all-or-nothing)**
+Each Nakshatra belongs to one of three Nadis: Aadi, Madhya, or Antya.
+If groom and bride share the same Nadi: score = 0 (Nadi Dosha — considered
+the most serious affliction in the whole system). If different: score = 8.
 
-    def tara_count(a_idx, b_idx):
-        distance = (b_idx - a_idx) % 27 + 1
-        remainder = distance % 9 or 9
-        return ref["tara_table"][remainder]  # {"name": ..., "favorable": bool}
+**Total = sum of all eight koots, maximum 36.**
 
-    tara_gb = tara_count(g_idx, b_idx)  # groom -> bride
-    tara_bg = tara_count(b_idx, g_idx)  # bride -> groom
-    favorable_count = sum([tara_gb["favorable"], tara_bg["favorable"]])
-    score = {0: 0, 1: 1.5, 2: 3}[favorable_count]
-    return {"score": score, "max": 3,
-            "detail": f"{tara_gb['name']} / {tara_bg['name']}"}
+---
 
+## 3. Separate Pass/Fail Checks (outside the 36 points)
 
-def calculate_yoni(groom: Person, bride: Person, ref: dict) -> dict:
-    """4 points max. Animal-Yoni compatibility table."""
-    g_yoni = ref["yoni_table"][groom.nakshatra]
-    b_yoni = ref["yoni_table"][bride.nakshatra]
-    score = ref["yoni_compatibility"][g_yoni][b_yoni]
-    return {"score": score, "max": 4,
-            "detail": f"Groom Yoni={g_yoni}, Bride Yoni={b_yoni}"}
+**Sagotra check (Gotra):**
+If the groom's and bride's Gotra are the same (case-insensitively), flag
+**Sagotra Dosha**. This is treated as a hard gate in most communities —
+traditionally not permitted regardless of how high the 36-point score is.
 
+**Manglik check:**
+Compare the two stated Manglik statuses:
+- Both "Manglik" or both "Non-Manglik" → compatible.
+- One "Anshik" (partial) paired with the other "Manglik" or "Non-Manglik"
+  → generally considered acceptable, but flagged for astrologer review.
+- A clear "Manglik" vs. "Non-Manglik" mismatch → flagged as incompatible,
+  astrologer review recommended (many traditions hold this can still be
+  resolved by remedies, so it's a flag, not an automatic rejection).
 
-def calculate_graha_maitri(groom: Person, bride: Person, ref: dict) -> dict:
-    """5 points max. Friendship between the planetary lords of both Rashis."""
-    g_lord = ref["rashi_table"][groom.rashi]["lord"]
-    b_lord = ref["rashi_table"][bride.rashi]["lord"]
-    score = ref["graha_maitri_table"][g_lord][b_lord]
-    return {"score": score, "max": 5,
-            "detail": f"Groom Lord={g_lord}, Bride Lord={b_lord}"}
+---
 
+## 4. Interpreting the Final Result
 
-def calculate_gana(groom: Person, bride: Person, ref: dict) -> dict:
-    """6 points max. Deva/Manushya/Rakshasa compatibility."""
-    g_gana = ref["gana_table"][groom.nakshatra]
-    b_gana = ref["gana_table"][bride.nakshatra]
-    score = ref["gana_compatibility"][g_gana][b_gana]
-    return {"score": score, "max": 6,
-            "detail": f"Groom Gana={g_gana}, Bride Gana={b_gana}"}
+Apply in this order:
 
+1. **Sagotra Dosha present** → report as prohibited regardless of score;
+   stop here.
+2. **Nadi Dosha present** (score 0 on Nadi) → report as traditionally
+   advised against, regardless of the numeric total.
+3. Otherwise, band the numeric total out of 36:
+   - 0–18: Below average match
+   - 18–24: Average match
+   - 24–32: Good match
+   - 32–36: Excellent match
+4. If **Bhakoot Dosha** is present (and Nadi Dosha is not) → append a note
+   recommending astrologer review, without overriding the numeric band.
+5. Report the **Manglik check** result alongside the score as its own
+   line item — it is never merged into the 36-point total.
 
-def calculate_bhakoot(groom: Person, bride: Person, ref: dict) -> dict:
-    """7 points max. Distance between Rashis; certain distances = dosha (0)."""
-    rashi_list = ref["rashi_order"]  # ordered list of 12 rashi names
-    g_idx = rashi_list.index(groom.rashi)
-    b_idx = rashi_list.index(bride.rashi)
-    distance = (b_idx - g_idx) % 12 + 1
-    dosha_distances = {2, 12, 5, 9, 6, 8}
-    has_dosha = distance in dosha_distances
-    score = 0 if has_dosha else 7
-    return {"score": score, "max": 7,
-            "detail": f"Rashi distance={distance}", "dosha": has_dosha}
-
-
-def calculate_nadi(groom: Person, bride: Person, ref: dict) -> dict:
-    """8 points max (all-or-nothing). Same Nadi = 0 (Nadi Dosha)."""
-    g_nadi = ref["nadi_table"][groom.nakshatra]
-    b_nadi = ref["nadi_table"][bride.nakshatra]
-    has_dosha = g_nadi == b_nadi
-    score = 0 if has_dosha else 8
-    return {"score": score, "max": 8,
-            "detail": f"Groom Nadi={g_nadi}, Bride Nadi={b_nadi}", "dosha": has_dosha}
-
-
-def calculate_manglik(groom: Person, bride: Person) -> dict:
-    """Separate from the 36-point system. Checks Mars placement for both."""
-    manglik_houses = {1, 2, 4, 7, 8, 12}
-
-    def is_manglik(p: Person) -> bool:
-        return (p.mars_house_from_lagna in manglik_houses or
-                p.mars_house_from_moon in manglik_houses)
-
-    g_manglik = is_manglik(groom)
-    b_manglik = is_manglik(bride)
-    # Both manglik or both non-manglik is generally considered compatible
-    compatible = g_manglik == b_manglik
-    return {
-        "groom_manglik": g_manglik,
-        "bride_manglik": b_manglik,
-        "compatible": compatible,
-        "detail": "Match on Manglik status" if compatible else "Mismatch — recommend astrologer review"
-    }
-
-
-KOOT_FUNCTIONS = {
-    "varna": calculate_varna,
-    "vashya": calculate_vashya,
-    "tara": calculate_tara,
-    "yoni": calculate_yoni,
-    "graha_maitri": calculate_graha_maitri,
-    "gana": calculate_gana,
-    "bhakoot": calculate_bhakoot,
-    "nadi": calculate_nadi,
-}
-
-
-def run_gun_milan(groom: Person, bride: Person) -> Dict[str, Any]:
-    ref = load_reference_table()  # loads & caches all reference YAML files
-    koot_scores = {name: fn(groom, bride, ref) for name, fn in KOOT_FUNCTIONS.items()}
-    total_score = sum(k["score"] for k in koot_scores.values())
-    manglik_result = calculate_manglik(groom, bride)
-
-    return {
-        "koot_scores": koot_scores,
-        "total_score": total_score,
-        "total_max": 36,
-        "doshas": {
-            "nadi_dosha": koot_scores["nadi"].get("dosha", False),
-            "bhakoot_dosha": koot_scores["bhakoot"].get("dosha", False),
-            "manglik_match": manglik_result,
-        },
-        "interpretation": interpret_score(total_score, koot_scores["nadi"], koot_scores["bhakoot"]),
-    }
-
-
-def interpret_score(total: float, nadi: dict, bhakoot: dict) -> str:
-    if nadi.get("dosha"):
-        band = "Nadi Dosha present — traditionally advised against regardless of score"
-    elif total <= 18:
-        band = "Below average match"
-    elif total <= 24:
-        band = "Average match"
-    elif total <= 32:
-        band = "Good match"
-    else:
-        band = "Excellent match"
-    if bhakoot.get("dosha") and not nadi.get("dosha"):
-        band += "; Bhakoot Dosha present — recommend astrologer review"
-    return band
-```
-
-## 3. How the API layer uses this
-
-```python
-# backend/api/match_routes.py  (excerpt)
-
-from core.gun_milan import Person, run_gun_milan
-from core.yaml_store import load_my_biodata, save_match_record
-
-@bp.route("/api/match", methods=["POST"])
-def match_biodata():
-    payload = request.get_json()
-    bride = Person(**payload["bride"])          # validated via schema first
-    groom_data = load_my_biodata()["astrology"]
-    groom = Person(full_name=load_my_biodata()["personal"]["full_name"], **groom_data)
-
-    result = run_gun_milan(groom, bride)
-    record_path = save_match_record(groom, bride, result, notes=payload.get("notes"))
-
-    return jsonify({"result": result, "saved_to": record_path}), 201
-```
-
-## 4. Why scores are computed this way (rationale)
-
-- Each koot function takes the same `(groom, bride, ref)` signature so they can be run generically via `KOOT_FUNCTIONS` dict — easy to add/remove a koot later.
-- All classical lookup tables are **injected as data** (`ref`), never hardcoded inside the function bodies — see `02_DATA_MODEL.md §3`.
-- Manglik is deliberately **excluded from the 36-point total** and reported separately, matching real-world practice where Manglik matching is a pass/fail gate, not a partial score.
-- `interpret_score()` centralizes the "banding" logic so the frontend doesn't need to re-implement threshold rules — it just displays whatever string the backend returns.
+---
 
 ## 5. Validation Before Production Use
 
-⚠️ **Important:** the compatibility sub-tables referenced above (`vashya_compatibility`, `yoni_compatibility`, `graha_maitri_table`, `gana_compatibility`, `tara_table`, and the Bhakoot dosha-distance set `{2,12,5,9,6,8}`) are the classical rules, but transcription errors are easy to make. Before trusting any score this system produces:
+The compatibility tables referenced above (Vashya, Yoni, Graha Maitri,
+Gana, Tara, and the Bhakoot afflicted-distance set) are the classical
+rules, but transcription errors are easy to introduce. Before trusting
+any result:
 
-1. Cross-check every reference YAML file against a trusted Panchang or published Ashtakoot reference table.
-2. Spot-check the engine's output for a couple of known example horoscopes against a trusted online Kundali-matching tool or an astrologer's manual calculation.
-3. Treat `mars_house_from_lagna` / `mars_house_from_moon` / `nakshatra_charan` as inputs that must themselves be verified (as we found with your own chart earlier) — the calculation is only as correct as these inputs.
+1. Cross-check every lookup table against a trusted Panchang or published
+   Ashtakoot reference.
+2. Spot-check results against a trusted Kundali-matching tool or an
+   astrologer's manual calculation for a couple of known example charts.
+3. Treat Nakshatra Charan, stated Gana, Gotra, and Manglik status as
+   inputs that must themselves be verified against each person's actual
+   kundli/astrologer reading — as this conversation's earlier corrections
+   to your own chart showed, transcription errors are easy to make from
+   handwritten source documents.
+
+---
+
+## 6. Downstream Impact
+
+This field change (Lagna removed; Nakshatra, Gana, Gotra, Manglik Status
+added/kept as direct inputs) also affects the `astrology` block in
+`my_biodata.yaml` (02_DATA_MODEL.md) and the `bride` object in the
+`POST /api/match` request (04_API_SPEC.md) — both should drop the
+Lagna/Mars-house fields and add `gana`, `gotra`, and `manglik_status`
+to stay consistent with this file.

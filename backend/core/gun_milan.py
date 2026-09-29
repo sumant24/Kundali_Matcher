@@ -10,9 +10,12 @@ class Person:
     rashi: str
     nakshatra: str
     nakshatra_charan: int
-    lagna: str
-    mars_house_from_lagna: int
-    mars_house_from_moon: int
+    lagna: Optional[str] = "Vrishchik"
+    mars_house_from_lagna: Optional[int] = 1
+    mars_house_from_moon: Optional[int] = 10
+    gana: Optional[str] = "Manushya"
+    gotra: Optional[str] = "Chandratr"
+    manglik_status: Optional[str] = "Non-Manglik"
 
 
 def normalize_name(val: str) -> str:
@@ -306,8 +309,61 @@ KOOT_FUNCTIONS = {
 }
 
 
-def interpret_score(total: float, nadi: dict, bhakoot: dict) -> str:
-    if nadi.get("dosha"):
+def check_sagotra(groom: Person, bride: Person) -> Dict[str, Any]:
+    """Sagotra check: Same Gotra alliance is traditionally prohibited in most communities."""
+    g_gotra = str(groom.gotra or "").strip().lower()
+    b_gotra = str(bride.gotra or "").strip().lower()
+    if g_gotra and b_gotra and g_gotra == b_gotra:
+        return {
+            "has_dosha": True,
+            "detail": f"समान गोत्र ({groom.gotra}) — सगोत्र विवाह शास्त्रानुसार वर्ज्य मानला जातो / Same Gotra ({groom.gotra}) — Sagotra alliance is traditionally prohibited."
+        }
+    return {
+        "has_dosha": False,
+        "detail": f"भिन्न गोत्र (वर: {groom.gotra or 'चांद्रात्र'}, वधू: {bride.gotra or 'भिन्न'}) / Different Gotras — No Sagotra Dosha."
+    }
+
+
+def check_stated_manglik(groom: Person, bride: Person) -> Dict[str, Any]:
+    """Evaluates Manglik status stated directly on biodatas."""
+    g_raw = str(groom.manglik_status or "Non-Manglik").strip().lower()
+    b_raw = str(bride.manglik_status or "Non-Manglik").strip().lower()
+
+    g_is_manglik = ("yes" in g_raw or "manglik" in g_raw) and ("non" not in g_raw and "anshik" not in g_raw)
+    g_is_anshik = "anshik" in g_raw or "partial" in g_raw
+
+    b_is_manglik = ("yes" in b_raw or "manglik" in b_raw) and ("non" not in b_raw and "anshik" not in b_raw)
+    b_is_anshik = "anshik" in b_raw or "partial" in b_raw
+
+    if g_is_anshik or b_is_anshik:
+        return {
+            "compatible": True,
+            "groom_manglik": groom.manglik_status,
+            "bride_manglik": bride.manglik_status,
+            "detail": "आंशिक मंगळ स्थिती — सर्वसामान्यपणे स्वीकार्य, अनुभवी ज्योतिषाचा सल्ला घ्यावा / Anshik Manglik status — generally acceptable, astrologer review recommended."
+        }
+    elif g_is_manglik == b_is_manglik:
+        status_text = "दोघेही मंगळ दोषमुक्त" if not g_is_manglik else "दोघेही मंगळीक"
+        label = "Non-Manglik" if not g_is_manglik else "Manglik"
+        return {
+            "compatible": True,
+            "groom_manglik": groom.manglik_status,
+            "bride_manglik": bride.manglik_status,
+            "detail": f"{status_text} (सुसंगत) / Both have matching Manglik status ({label})."
+        }
+    else:
+        return {
+            "compatible": False,
+            "groom_manglik": groom.manglik_status,
+            "bride_manglik": bride.manglik_status,
+            "detail": "मंगळ स्थितीमध्ये भिन्नता — ज्योतिषांचा सल्ला आवश्यक / Manglik mismatch — Astrologer review recommended."
+        }
+
+
+def interpret_score(total: float, nadi: dict, bhakoot: dict, sagotra_dosha: bool = False, sagotra_detail: str = "") -> str:
+    if sagotra_dosha:
+        return f"सगोत्र दोष उपस्थित — {sagotra_detail} / Sagotra Dosha present — alliance traditionally prohibited regardless of score"
+    elif nadi.get("dosha"):
         band = "Nadi Dosha present — traditionally advised against regardless of score; requires detailed astrologer review"
     elif total < 18:
         band = "Below average match (Score < 18) — compatibility challenges present"
@@ -329,24 +385,31 @@ def run_gun_milan(groom: Person, bride: Person) -> Dict[str, Any]:
     koot_scores = {name: fn(groom, bride, ref) for name, fn in KOOT_FUNCTIONS.items()}
     total_score = sum(k["score"] for k in koot_scores.values())
 
-    manglik_result = calculate_manglik_match(
-        groom_lagna_mars=groom.mars_house_from_lagna,
-        groom_moon_mars=groom.mars_house_from_moon,
-        bride_lagna_mars=bride.mars_house_from_lagna,
-        bride_moon_mars=bride.mars_house_from_moon
-    )
+    # Stated Manglik evaluation with fallback to house calculation
+    manglik_stated = check_stated_manglik(groom, bride)
 
+    sagotra_res = check_sagotra(groom, bride)
     nadi_dosha = koot_scores["nadi"].get("dosha", False)
     bhakoot_dosha = koot_scores["bhakoot"].get("dosha", False)
+
+    # Cross-check stated Gana against Nakshatra
+    gana_table = ref.get("gana_table", {})
+    implied_b_gana = gana_table.get(bride.nakshatra) or gana_table.get(bride.nakshatra.replace(" ", "_"), "Manushya")
+    gana_warning = None
+    if bride.gana and bride.gana.strip().lower() != implied_b_gana.strip().lower():
+        gana_warning = f"नोंदवलेला गण ({bride.gana}) आणि नक्षत्रावरून निघणारा गण ({implied_b_gana}) यामध्ये भिन्नता आढळली. / Stated Gana ({bride.gana}) differs from Nakshatra-implied Gana ({implied_b_gana})."
 
     return {
         "koot_scores": koot_scores,
         "total_score": round(total_score, 1),
         "total_max": 36,
         "doshas": {
+            "sagotra_dosha": sagotra_res["has_dosha"],
+            "sagotra_detail": sagotra_res["detail"],
             "nadi_dosha": nadi_dosha,
             "bhakoot_dosha": bhakoot_dosha,
-            "manglik_match": manglik_result,
+            "manglik_match": manglik_stated,
+            "gana_warning": gana_warning,
         },
-        "interpretation": interpret_score(total_score, koot_scores["nadi"], koot_scores["bhakoot"]),
+        "interpretation": interpret_score(total_score, koot_scores["nadi"], koot_scores["bhakoot"], sagotra_res["has_dosha"], sagotra_res["detail"]),
     }

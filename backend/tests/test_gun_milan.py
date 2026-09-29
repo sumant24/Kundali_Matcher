@@ -84,3 +84,17 @@ def test_full_gun_milan(sumant_groom):
     assert len(result["koot_scores"]) == 8
     assert "doshas" in result
     assert "interpretation" in result
+    assert "sagotra_dosha" in result["doshas"]
+
+
+def test_sagotra_check(sumant_groom):
+    # Same gotra (Chandratr) -> Sagotra Dosha
+    bride_same_gotra = Person("Same Gotra Bride", "Mithuna", "Mrigashira", 3, gotra="Chandratr")
+    res_same = run_gun_milan(sumant_groom, bride_same_gotra)
+    assert res_same["doshas"]["sagotra_dosha"] is True
+    assert "सगोत्र दोष" in res_same["interpretation"]
+
+    # Different gotra (Kashyap) -> No Sagotra Dosha
+    bride_diff_gotra = Person("Diff Gotra Bride", "Mithuna", "Mrigashira", 3, gotra="Kashyap")
+    res_diff = run_gun_milan(sumant_groom, bride_diff_gotra)
+    assert res_diff["doshas"]["sagotra_dosha"] is False

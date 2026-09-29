@@ -54,9 +54,13 @@ astrology:
   rashi: "Kumbha"
   rashi_marathi: "कुंभ"
   rashi_english: "Aquarius"
+  nad: "Adya"
+  nad_marathi: "आद्य"
   nakshatra: "Purva Bhadrapada"
   nakshatra_marathi: "पूर्व भाद्रपदा"
   nakshatra_charan: 1
+  gana: "Manushya"
+  gana_marathi: "मनुष्य"
   gotra: "Chandratr"
   gotra_marathi: "चांद्रात्र"
   kuladevata: "Pinglai Devi, Nerpinglai And Venkatesh Balaji"
@@ -72,7 +76,14 @@ astrology:
 contact:
   address: "Abhyankar Nagar, Nagpur, Maharashtra"
   address_marathi: "अभ्यंकर नगर, नागपूर, महाराष्ट्र"
-  phone: "9822235069, 9403590890, 8208007688"
+  property_house: "Own house (Ground + 1 Floor)"
+  property_house_marathi: "स्वतःचे घर (तळमजला + १ मजला)"
+  property_house_note: "Ground floor is on rent and live on 1st floor"
+  property_house_note_marathi: "तळमजला भाड्याने दिला आहे आणि आम्ही पहिल्या मजल्यावर राहतो."
+  phone: "Father's no - 9822235069 , Mother's no - 9403590890 and Son's no - 8208007688"
+  phone_father: "9822235069"
+  phone_mother: "9403590890"
+  phone_son: "8208007688"
   email: "sumantjoshi24@gmail.com"
 
 meta:
