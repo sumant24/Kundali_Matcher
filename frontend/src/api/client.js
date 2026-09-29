@@ -258,8 +258,26 @@ export const verifyOtp = async (otp) => {
   return response.data;
 };
 
+export const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+
 export const checkSession = async () => {
+  const token = localStorage.getItem('sumant_admin_token');
+  if (!token) {
+    throw new Error('No active session token');
+  }
+
+  // Client-side inactivity verification
+  const lastActivityStr = localStorage.getItem('sumant_admin_last_activity');
+  if (lastActivityStr) {
+    const lastActivity = parseInt(lastActivityStr, 10);
+    if (!isNaN(lastActivity) && Date.now() - lastActivity > INACTIVITY_TIMEOUT_MS) {
+      await logoutAdmin();
+      throw new Error('सत्र कालबाह्य झाले (३० मिनिटे कोणतीही हालचाल नसल्यामुळे) / Session expired due to 30 minutes of inactivity');
+    }
+  }
+
   const response = await client.get('/auth/check-session');
+  localStorage.setItem('sumant_admin_last_activity', Date.now().toString());
   return response.data;
 };
 
@@ -269,8 +287,14 @@ export const logoutAdmin = async () => {
   } catch (e) {
     // Ignore network errors on logout
   } finally {
+    // Completely clear all admin credentials, timestamps, and cached session data
     localStorage.removeItem('sumant_admin_token');
     localStorage.removeItem('sumant_admin_email');
+    localStorage.removeItem('sumant_admin_last_activity');
+    localStorage.removeItem('sumant_admin_login_time');
+    try {
+      sessionStorage.clear();
+    } catch (e) {}
   }
 };
 

@@ -147,17 +147,20 @@ def verify_otp():
     _ACTIVE_OTP.pop(ADMIN_EMAIL, None)
 
     # Issue session token valid for 24 hours
+    # Issue session token valid for 24 hours max, with 30-minute rolling inactivity limit
     token = str(uuid.uuid4())
     _ACTIVE_SESSIONS[token] = {
         "email": ADMIN_EMAIL,
-        "expires_at": now + datetime.timedelta(hours=24)
+        "expires_at": now + datetime.timedelta(hours=24),
+        "last_activity": now
     }
 
     return jsonify({
         "status": "authenticated",
         "token": token,
         "email": ADMIN_EMAIL,
-        "expires_in_hours": 24
+        "expires_in_hours": 24,
+        "inactivity_timeout_minutes": 30
     }), 200
 
 
@@ -173,10 +176,23 @@ def check_session():
 
     session = _ACTIVE_SESSIONS[token]
     now = datetime.datetime.now(datetime.timezone.utc)
+
+    # Check absolute expiration (24h)
     if now > session["expires_at"]:
         _ACTIVE_SESSIONS.pop(token, None)
         return jsonify({"valid": False, "error": "Session expired"}), 401
 
+    # Check inactivity expiration (30 minutes)
+    last_act = session.get("last_activity", now)
+    if (now - last_act).total_seconds() > 1800:
+        _ACTIVE_SESSIONS.pop(token, None)
+        return jsonify({
+            "valid": False,
+            "error": "सत्र कालबाह्य झाले (३० मिनिटे कोणतीही हालचाल नसल्यामुळे) / Session expired due to 30 minutes of inactivity"
+        }), 401
+
+    # Refresh last activity timestamp
+    session["last_activity"] = now
     return jsonify({"valid": True, "email": session["email"]}), 200
 
 
@@ -186,4 +202,4 @@ def logout():
     if auth_header.startswith("Bearer "):
         token = auth_header.split(" ", 1)[1].strip()
         _ACTIVE_SESSIONS.pop(token, None)
-    return jsonify({"status": "logged_out"}), 200
+    return jsonify({"status": "logged_out", "message": "Session successfully cleared"}), 200

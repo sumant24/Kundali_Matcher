@@ -24,7 +24,8 @@ import {
   CheckCircle2,
   RefreshCw,
   Eye,
-  EyeOff
+  EyeOff,
+  Clock
 } from 'lucide-react';
 
 export default function AdminPage() {
@@ -50,20 +51,53 @@ export default function AdminPage() {
   const [sortBy, setSortBy] = useState('newest'); // newest, oldest, score_high, score_low
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
-  // Check existing session
+  // Check existing session on mount
   useEffect(() => {
     checkSession()
       .then(() => {
         setIsAuthenticated(true);
         fetchMatchHistory();
       })
-      .catch(() => {
+      .catch((err) => {
         setIsAuthenticated(false);
+        setMatches([]);
+        if (err && err.message && err.message.includes('inactivity')) {
+          setAuthError('३० मिनिटे कोणतीही हालचाल नसल्यामुळे सत्र आपोआप बंद झाले. / Session expired due to 30 minutes of inactivity.');
+        }
       })
       .finally(() => {
         setAuthChecking(false);
       });
   }, []);
+
+  // 30-Minute Inactivity Auto-Logout Tracker
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const INACTIVITY_LIMIT_MS = 30 * 60 * 1000; // 30 minutes
+
+    const updateActivity = () => {
+      localStorage.setItem('sumant_admin_last_activity', Date.now().toString());
+    };
+
+    // User activity events to monitor
+    const activityEvents = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+    activityEvents.forEach((ev) => window.addEventListener(ev, updateActivity, { passive: true }));
+
+    // Periodic check every 5 seconds
+    const intervalId = setInterval(() => {
+      const storedLastActivity = parseInt(localStorage.getItem('sumant_admin_last_activity') || '0', 10);
+      if (storedLastActivity && Date.now() - storedLastActivity >= INACTIVITY_LIMIT_MS) {
+        clearInterval(intervalId);
+        handleAutoLogout('३० मिनिटे कोणतीही हालचाल नसल्यामुळे सत्र आपोआप बंद झाले. कृपया पुन्हा लॉगिन करा. / Session automatically logged out due to 30 minutes of inactivity.');
+      }
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+      activityEvents.forEach((ev) => window.removeEventListener(ev, updateActivity));
+    };
+  }, [isAuthenticated]);
 
   const fetchMatchHistory = () => {
     setLoadingData(true);
@@ -105,6 +139,7 @@ export default function AdminPage() {
       if (res.token) {
         localStorage.setItem('sumant_admin_token', res.token);
         localStorage.setItem('sumant_admin_email', res.email);
+        localStorage.setItem('sumant_admin_last_activity', Date.now().toString());
         setIsAuthenticated(true);
         fetchMatchHistory();
       }
@@ -115,12 +150,50 @@ export default function AdminPage() {
     }
   };
 
-  // Logout
+  // Auto-logout triggered by 30-minute inactivity
+  const handleAutoLogout = async (reason) => {
+    try {
+      await logoutAdmin();
+    } catch (e) {
+      // Ignore
+    } finally {
+      // Completely wipe state and localStorage
+      setIsAuthenticated(false);
+      setMatches([]); // Clear all evaluation history from memory
+      setStep(1);
+      setPassword('MH1422@31');
+      setOtp('');
+      setSearch('');
+      setScoreFilter('all');
+      setDoshaFilter('all');
+      setSortBy('newest');
+      setDeleteConfirmId(null);
+      setOtpSentMessage('');
+      setAuthError(reason || '३० मिनिटे कोणतीही हालचाल नसल्यामुळे सत्र आपोआप बंद झाले. / Session automatically logged out due to 30 minutes of inactivity.');
+    }
+  };
+
+  // Manual Logout with complete data and session purge
   const handleLogout = async () => {
-    await logoutAdmin();
-    setIsAuthenticated(false);
-    setStep(1);
-    setOtp('');
+    setAuthLoading(true);
+    try {
+      await logoutAdmin();
+    } finally {
+      // Completely purge state and credentials
+      setIsAuthenticated(false);
+      setMatches([]); // Purge loaded match evaluations completely
+      setStep(1);
+      setPassword('MH1422@31');
+      setOtp('');
+      setSearch('');
+      setScoreFilter('all');
+      setDoshaFilter('all');
+      setSortBy('newest');
+      setDeleteConfirmId(null);
+      setAuthError(null);
+      setOtpSentMessage('सत्र सुरक्षितपणे बंद करण्यात आले आहे / Session has been securely cleared and logged out.');
+      setAuthLoading(false);
+    }
   };
 
   // Delete match record
@@ -438,7 +511,21 @@ export default function AdminPage() {
           </h1>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: '0.76rem',
+            color: 'var(--text-secondary)',
+            backgroundColor: '#F5F3EC',
+            border: '1px solid var(--border-light)',
+            padding: '5px 10px',
+            borderRadius: '6px'
+          }}>
+            <Clock size={13} color="var(--accent-gold)" />
+            <span>३० मि. निष्क्रियतेनंतर ऑटो-लॉगआउट / 30m Auto-Timeout</span>
+          </div>
           <button onClick={fetchMatchHistory} className="btn btn-secondary btn-sm" title="Refresh">
             <RefreshCw size={15} />
             <span>रिफ्रेश / Refresh</span>
@@ -447,7 +534,7 @@ export default function AdminPage() {
             <Sparkles size={15} />
             <span>नवीन पत्रिका / New Match</span>
           </Link>
-          <button onClick={handleLogout} className="btn btn-secondary btn-sm" style={{ color: '#C62828' }}>
+          <button onClick={handleLogout} className="btn btn-secondary btn-sm" style={{ color: '#C62828', borderColor: '#FFCDD2' }} title="Secure Logout">
             <LogOut size={15} />
             <span>बाहेर पडा / Logout</span>
           </button>
