@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import BiodataPage from './pages/BiodataPage';
 import MatchFormPage from './pages/MatchFormPage';
@@ -9,7 +9,7 @@ import PhotosPage from './pages/PhotosPage';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Navbar />
 
@@ -52,6 +52,6 @@ export default function App() {
           </div>
         </footer>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
