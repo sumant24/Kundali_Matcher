@@ -15,7 +15,7 @@ import {
 const PERSONAL_PHOTOS = [
   {
     id: 1,
-    src: '/img1.png',
+    src: './img1.png',
     titleMarathi: 'सुमंत जोशी (छायाचित्र १)',
     titleEnglish: 'Sumant Joshi (Portrait 1)',
     tagMarathi: 'वैयक्तिक',
@@ -23,7 +23,7 @@ const PERSONAL_PHOTOS = [
   },
   {
     id: 2,
-    src: '/img2.jpeg',
+    src: './img2.jpeg',
     titleMarathi: 'सुमंत जोशी (छायाचित्र २)',
     titleEnglish: 'Sumant Joshi (Portrait 2)',
     tagMarathi: 'वैयक्तिक',
@@ -31,7 +31,7 @@ const PERSONAL_PHOTOS = [
   },
   {
     id: 3,
-    src: '/img3.jpeg',
+    src: './img3.jpeg',
     titleMarathi: 'सुमंत जोशी (छायाचित्र ३)',
     titleEnglish: 'Sumant Joshi (Portrait 3)',
     tagMarathi: 'वैयक्तिक',
@@ -39,7 +39,7 @@ const PERSONAL_PHOTOS = [
   },
   {
     id: 4,
-    src: '/img4.JPG',
+    src: './img4.JPG',
     titleMarathi: 'सुमंत जोशी (छायाचित्र ४)',
     titleEnglish: 'Sumant Joshi (Portrait 4)',
     tagMarathi: 'वैयक्तिक',
@@ -50,7 +50,7 @@ const PERSONAL_PHOTOS = [
 const FAMILY_PHOTOS = [
   {
     id: 5,
-    src: '/img5.JPG',
+    src: './img5.JPG',
     titleMarathi: 'जोशी कुटुंब (कौटुंबिक छायाचित्र १)',
     titleEnglish: 'Joshi Family (Family Photo 1)',
     tagMarathi: 'कौटुंबिक',
@@ -58,7 +58,7 @@ const FAMILY_PHOTOS = [
   },
   {
     id: 6,
-    src: '/img6.jpeg',
+    src: './img6.jpeg',
     titleMarathi: 'जोशी कुटुंब (कौटुंबिक छायाचित्र २)',
     titleEnglish: 'Joshi Family (Family Photo 2)',
     tagMarathi: 'कौटुंबिक',

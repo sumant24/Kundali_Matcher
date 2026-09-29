@@ -412,37 +412,37 @@ export default function BiodataPage() {
             marginBottom: '14px'
           }}>
             <Link to="/photos" style={{ textDecoration: 'none', position: 'relative', height: '140px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-light)', display: 'block' }}>
-              <img src="/img1.png" alt="Sumant Joshi" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="./img1.png" alt="Sumant Joshi" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '4px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '0.72rem', textAlign: 'center' }}>
                 वैयक्तिक / Personal
               </div>
             </Link>
             <Link to="/photos" style={{ textDecoration: 'none', position: 'relative', height: '140px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-light)', display: 'block' }}>
-              <img src="/img2.jpeg" alt="Sumant Joshi" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="./img2.jpeg" alt="Sumant Joshi" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '4px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '0.72rem', textAlign: 'center' }}>
                 वैयक्तिक / Personal
               </div>
             </Link>
             <Link to="/photos" style={{ textDecoration: 'none', position: 'relative', height: '140px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-light)', display: 'block' }}>
-              <img src="/img3.jpeg" alt="Sumant Joshi" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="./img3.jpeg" alt="Sumant Joshi" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '4px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '0.72rem', textAlign: 'center' }}>
                 वैयक्तिक / Personal
               </div>
             </Link>
             <Link to="/photos" style={{ textDecoration: 'none', position: 'relative', height: '140px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-light)', display: 'block' }}>
-              <img src="/img4.JPG" alt="Sumant Joshi" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="./img4.JPG" alt="Sumant Joshi" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '4px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '0.72rem', textAlign: 'center' }}>
                 वैयक्तिक / Personal
               </div>
             </Link>
             <Link to="/photos" style={{ textDecoration: 'none', position: 'relative', height: '140px', borderRadius: '8px', overflow: 'hidden', border: '1.5px solid var(--accent-gold)', display: 'block' }}>
-              <img src="/img5.JPG" alt="Joshi Family" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="./img5.JPG" alt="Joshi Family" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '4px', background: 'rgba(154,106,30,0.9)', color: '#FFFFFF', fontSize: '0.72rem', textAlign: 'center', fontWeight: 700 }}>
                 कौटुंबिक / Family
               </div>
             </Link>
             <Link to="/photos" style={{ textDecoration: 'none', position: 'relative', height: '140px', borderRadius: '8px', overflow: 'hidden', border: '1.5px solid var(--accent-gold)', display: 'block' }}>
-              <img src="/img6.jpeg" alt="Joshi Family" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src="./img6.jpeg" alt="Joshi Family" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '4px', background: 'rgba(154,106,30,0.9)', color: '#FFFFFF', fontSize: '0.72rem', textAlign: 'center', fontWeight: 700 }}>
                 कौटुंबिक / Family
               </div>
