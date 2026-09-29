@@ -309,7 +309,7 @@ export default function MatchFormPage() {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--border-light)' }}>
               <span style={{ color: 'var(--text-secondary)' }}>मंगळ स्थिती / Manglik:</span>
-              <span className="badge badge-success">नाही / Non-Manglik</span>
+              <span className="badge badge-warning" style={{ backgroundColor: '#FFF3E0', color: '#E65100', border: '1px solid #FFE0B2' }}>होय / Manglik</span>
             </div>
 
             {/* Property House Details */}

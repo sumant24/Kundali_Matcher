@@ -55,8 +55,8 @@ export const STATIC_BIODATA = {
     current_role: "AI & Python Software Developer",
     current_role_marathi: "एआय आणि पायथन सॉफ्टवेअर डेव्हलपर",
     enterprise_experience: "Works on Hospycare, a Hospital Information Management System (HIMS) and Clinical Decision Support System (CDSS) developed under Micropro; also undertakes client-facing full-stack web and enterprise software development.",
-    annual_income: "₹8.5 Lakh",
-    annual_income_marathi: "₹८.५ लाख",
+    annual_income: "₹8 Lakh",
+    annual_income_marathi: "₹८ लाख",
     work_location: "Nagpur",
     work_location_marathi: "नागपूर"
   },
@@ -94,9 +94,11 @@ export const STATIC_BIODATA = {
     lagna: "Vrishchik",
     lagna_marathi: "वृश्चिक",
     lagna_english: "Scorpio",
-    is_manglik: false,
-    mars_house_from_lagna: 3,
-    mars_house_from_moon: 5
+    is_manglik: true,
+    manglik_status: "Yes",
+    manglik_status_marathi: "होय",
+    mars_house_from_lagna: 1,
+    mars_house_from_moon: 10
   },
   contact: {
     address: "Abhyankar Nagar, Nagpur, Maharashtra",
@@ -167,10 +169,10 @@ function runLocalMatch(payload) {
       nakshatra_charan: 1,
       gana: "Manushya",
       gotra: "Chandratr",
-      manglik_status: "Non-Manglik",
+      manglik_status: "Manglik",
       lagna: "Vrishchik",
-      mars_house_from_lagna: 3,
-      is_manglik: false
+      mars_house_from_lagna: 1,
+      is_manglik: true
     },
     bride: {
       full_name: bride.full_name,

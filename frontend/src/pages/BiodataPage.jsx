@@ -187,8 +187,8 @@ export default function BiodataPage() {
     {
       labelMarathi: 'मंगळ स्थिती',
       labelEnglish: 'Manglik Status',
-      valueMarathi: 'नाही (मंगळ दोष नाही)',
-      valueEnglish: 'No (Non-Manglik)'
+      valueMarathi: 'होय (मंगळ दोष आहे)',
+      valueEnglish: 'Yes (Manglik)'
     },
   ];
 

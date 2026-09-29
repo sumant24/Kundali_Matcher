@@ -29,8 +29,8 @@ education_profession:
     Works on Hospycare, a Hospital Information Management System (HIMS)
     and Clinical Decision Support System (CDSS) developed under Micropro;
     also undertakes client-facing full-stack web and enterprise software development.
-  annual_income: "₹8.5 Lakh"
-  annual_income_marathi: "₹८.५ लाख"
+  annual_income: "₹8 Lakh"
+  annual_income_marathi: "₹८ लाख"
   work_location: "Nagpur"
   work_location_marathi: "नागपूर"
 
@@ -70,8 +70,8 @@ astrology:
   lagna_english: "Scorpio"
   mars_house_from_lagna: 1
   mars_house_from_moon: 10
-  manglik_status: "No"
-  manglik_status_marathi: "नाही"
+  manglik_status: "Yes"
+  manglik_status_marathi: "होय"
 
 contact:
   address: "Abhyankar Nagar, Nagpur, Maharashtra"
